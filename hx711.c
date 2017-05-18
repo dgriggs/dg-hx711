@@ -146,7 +146,7 @@ int main(int argc, char **argv)
 
   }
   reading = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
-  printf("%.0f\n", reading);
+  printf("%d\n", reading);
 
   printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
   unpull_pins();

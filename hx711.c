@@ -10,9 +10,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define CLOCK_PIN	31
-#define DATA_PIN	30
-#define N_SAMPLES	64
+#define CLOCK_PIN	3
+#define DATA_PIN	2
+#define N_SAMPLES	8
 #define SPREAD		10
 
 #define SCK_ON  (GPIO_SET0 = (1 << CLOCK_PIN))
@@ -23,6 +23,7 @@ void           reset_converter(void);
 unsigned long  read_cnt(long offset, int argc);
 void           set_gain(int r);
 void           setHighPri (void);
+void	       tare(void);
 
 
 void setHighPri (void)
@@ -58,7 +59,7 @@ void setup_gpio()
    GPIO_PULLCLK0 = 0;*/
 }
 
-void 	unpull_pins()
+void unpull_pins()
 {
    GPIO_PULL = 0;
 //   short_wait();
@@ -68,8 +69,6 @@ void 	unpull_pins()
    GPIO_PULLCLK0 = 0;
 } // unpull_pins
 
-
-
 int main(int argc, char **argv)
 {
   int i, j;
@@ -77,14 +76,35 @@ int main(int argc, char **argv)
   long tmp_avg=0;
   long tmp_avg2;
   long offset=0;
+  long reading=0;
   float filter_low, filter_high;
   float spread_percent = SPREAD / 100.0 /2.0;
+  float calibration_factor=1;
   int b;
   int nsamples=N_SAMPLES;
   long samples[nsamples];
 
-  if (argc == 2) {
-   offset = atol(argv[1]);
+  if (argc == 2) 
+  {
+    if (strcmp(argv[1],"0") == 0)
+    {
+      //tare();
+      printf("The scale has been tared.\n");
+      return 0;
+    }
+    else
+    {
+    calibration_factor = fabsf(atof(argv[1]));
+    }
+  }
+  else if (argc == 1)
+  {
+    printf("Debug mode with calibration factor = '1'\n");
+  }
+  else
+  {
+    printf("Please enter 1 argument - either a non-zero positive float value for calibration_factor or a '0' to tare the scale\n");
+    exit(1);
   }
 
   setHighPri();
@@ -109,7 +129,7 @@ int main(int argc, char **argv)
   filter_low =  (float) tmp_avg * (1.0 - spread_percent);
   filter_high = (float) tmp_avg * (1.0 + spread_percent);
 
-//  printf("%d %d\n", (int) filter_low, (int) filter_high);
+  printf("Filter low threshold: %d -- Filter high threshold: %d\n", (int) filter_low, (int) filter_high);
 
   for(i=0;i<nsamples;i++) {
 	if ((samples[i] < filter_high && samples[i] > filter_low) || 
@@ -120,17 +140,17 @@ int main(int argc, char **argv)
   }
 
   if (j == 0) {
-    printf("No data to consider\n");
+    printf("No data met filter requirements.\n");
     exit(255);
 
   }
-  printf("%d\n", (tmp_avg2 / j) - offset);
+  reading = (( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
+  printf("%.0f\n", reading);
 
-//  printf("average within %f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
+  printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
   unpull_pins();
   restore_io();
 }
-
 
 void reset_converter(void) {
 	SCK_ON;

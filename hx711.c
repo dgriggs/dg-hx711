@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #define CLOCK_PIN	3
 #define DATA_PIN	2
@@ -107,7 +108,7 @@ int main(int argc, char **argv)
   {
     reading = get_reading(calibration_factor);
     printf("Current Reading: %d\n", reading);
-    nanosleep((const struct timespec[]){{0, 1000000000L}}, NULL);
+    nanosleep((const struct timespec[]){{0, 500000000L}}, NULL);
   }
   unpull_pins();
   restore_io();

@@ -14,7 +14,7 @@
 
 #define CLOCK_PIN	3
 #define DATA_PIN	2
-#define N_SAMPLES	8
+#define N_SAMPLES	64
 #define SPREAD		10
 
 #define SCK_ON  (GPIO_SET0 = (1 << CLOCK_PIN))
@@ -140,7 +140,7 @@ unsigned long get_reading(float calibration_factor)
   filter_low =  (float) tmp_avg * (1.0 - spread_percent);
   filter_high = (float) tmp_avg * (1.0 + spread_percent);
 
-  printf("Filter low threshold: %d -- Filter high threshold: %d\n", (int) filter_low, (int) filter_high);
+  //printf("Filter low threshold: %d -- Filter high threshold: %d\n", (int) filter_low, (int) filter_high);
 
   for(i=0;i<nsamples;i++) {
 	if ((samples[i] < filter_high && samples[i] > filter_low) || 
@@ -154,8 +154,7 @@ unsigned long get_reading(float calibration_factor)
     exit(0);
   }
   output = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
-  printf("%d\n", output);
-  printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
+  //printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
   return output;
 }
 

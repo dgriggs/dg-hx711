@@ -141,7 +141,7 @@ unsigned long get_reading(float calibration_factor)
   filter_low =  (float) tmp_avg * (1.0 - spread_percent);
   filter_high = (float) tmp_avg * (1.0 + spread_percent);
 
-  //printf("Filter low threshold: %d -- Filter high threshold: %d\n", (int) filter_low, (int) filter_high);
+  printf("Filter low threshold: %d -- Filter high threshold: %d\n", (int) filter_low, (int) filter_high);
 
   for(i=0;i<nsamples;i++) {
 	if ((samples[i] < filter_high && samples[i] > filter_low) || 

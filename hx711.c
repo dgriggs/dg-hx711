@@ -79,6 +79,11 @@ int main(int argc, char **argv)
   float calibration_factor = 1;
   int b;
 
+  setHighPri();
+  setup_io();
+  setup_gpio();
+  reset_converter();
+	
   if (argc == 2) 
   {
     if (strcmp(argv[1],"0") == 0)
@@ -96,13 +101,7 @@ int main(int argc, char **argv)
   {
     printf("Please enter 1 argument - a non-zero positive float value for calibration_factor.\n");
     exit(1);
-  }
-
-  setHighPri();
-  setup_io();
-  setup_gpio();
-  reset_converter();
-	
+  }	
   reading = get_reading(calibration_factor);
   printf("Reading: %d\n", reading);
   unpull_pins();

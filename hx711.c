@@ -24,6 +24,7 @@ void           reset_converter(void);
 unsigned long  read_cnt(long offset, int argc);
 void           set_gain(int r);
 void           setHighPri (void);
+unsigned long  get_reading(float calibration_factor);
 void	       tare(void);
 
 
@@ -112,9 +113,14 @@ int main(int argc, char **argv)
   setup_io();
   setup_gpio();
   reset_converter();
+	
+  get_reading(calibration_factor);
 
-  j=0;
-
+  unpull_pins();
+  restore_io();
+}
+	
+void get_reading(float calibration_factor) {
   // get the dirty samples and average them
   for(i=0;i<nsamples;i++) {
   	reset_converter();
@@ -143,15 +149,14 @@ int main(int argc, char **argv)
   if (j == 0) {
     printf("No data met filter requirements.\n");
     exit(255);
-
   }
   reading = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
   printf("%d\n", reading);
 
   printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
-  unpull_pins();
-  restore_io();
 }
+
+
 
 void reset_converter(void) {
 	SCK_ON;

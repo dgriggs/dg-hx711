@@ -14,7 +14,7 @@
 
 #define CLOCK_PIN	3
 #define DATA_PIN	2
-#define N_SAMPLES	64
+#define N_SAMPLES	32
 #define SPREAD		10
 
 #define SCK_ON  (GPIO_SET0 = (1 << CLOCK_PIN))
@@ -154,7 +154,7 @@ unsigned long get_reading(float calibration_factor)
     exit(0);
   }
   output = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
-  //printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
+  printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
   return output;
 }
 

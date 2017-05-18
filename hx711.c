@@ -10,6 +10,7 @@
 #include <sched.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define CLOCK_PIN	3
 #define DATA_PIN	2

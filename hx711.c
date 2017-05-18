@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     printf("Please enter 1 argument - a non-zero positive float value for calibration_factor.\n");
     exit(1);
   }	
-  while(True)
+  while(true)
   {
     reading = get_reading(calibration_factor);
     printf("Reading: %d\n", reading);

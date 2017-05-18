@@ -108,7 +108,7 @@ int main(int argc, char **argv)
   {
     reading = get_reading(calibration_factor);
     printf("Current Reading: %d\n", reading);
-    nanosleep((const struct timespec[]){{0, 500000000L}}, NULL);
+    nanosleep((const struct timespec[]){{1, 0L}}, NULL);
   }
   unpull_pins();
   restore_io();

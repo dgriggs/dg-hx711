@@ -24,9 +24,11 @@ void           reset_converter(void);
 unsigned long  read_cnt(long offset, int argc);
 void           set_gain(int r);
 void           setHighPri (void);
-unsigned long  get_reading(float calibration_factor);
+void	       get_reading(float calibration_factor);
 void	       tare(void);
 
+
+long offset=0;
 
 void setHighPri (void)
 {
@@ -73,35 +75,39 @@ void unpull_pins()
 
 int main(int argc, char **argv)
 {
-  int i, j;
-  long tmp=0;
-  long tmp_avg=0;
-  long tmp_avg2;
-  long offset=0;
-  long reading=0;
-  float filter_low, filter_high;
-  float spread_percent = SPREAD / 100.0 /2.0;
-  float calibration_factor=1;
+  long reading = 0;
+  float calibration_factor = 1;
   int b;
-  int nsamples=N_SAMPLES;
-  long samples[nsamples];
 
   if (argc == 2) 
   {
     if (strcmp(argv[1],"0") == 0)
     {
-      //tare();
+      calibration_factor = fabsf(atof(argv[1]));
+      offset = get_reading(calibration_factor);
+      reading = get_reading(calibration_factor);
       printf("The scale has been tared.\n");
       return 0;
     }
     else
     {
     calibration_factor = fabsf(atof(argv[1]));
+    reading = get_reading(calibration_factor);
     }
   }
   else if (argc == 1)
   {
-    printf("Debug mode with calibration factor = '1'\n");
+    /*reading = get_reading(1);
+    // If things are broken this will show actual data
+    printf("Debug mode with calibration factor = '1'\n"); 
+    for (int i=31; i>=0; i--) {
+      printf("%d ", ((reading) & ( 1 << i )) != 0 );
+      printf("n: %10d     -  ", reading);
+      printf("\n");
+    }
+    */
+    printf("nope!\n");
+    exit(0);
   }
   else
   {
@@ -120,11 +126,22 @@ int main(int argc, char **argv)
   restore_io();
 }
 	
-void get_reading(float calibration_factor) {
+void get_reading(float calibration_factor) 
+{
+  int i, j;
+  long tmp=0;
+  long tmp_avg=0;
+  long tmp_avg2=0;
+  long output=0;
+  float filter_low, filter_high;
+  float spread_percent = SPREAD / 100.0 /2.0;
+  int nsamples=N_SAMPLES;
+  long samples[nsamples];
+
   // get the dirty samples and average them
   for(i=0;i<nsamples;i++) {
   	reset_converter();
-  	samples[i] = read_cnt(0, argc);
+  	samples[i] = read_cnt(0);
   	tmp_avg += samples[i];
   }
 
@@ -150,8 +167,8 @@ void get_reading(float calibration_factor) {
     printf("No data met filter requirements.\n");
     exit(255);
   }
-  reading = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
-  printf("%d\n", reading);
+  output = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
+  printf("%d\n", output);
 
   printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
 }
@@ -181,7 +198,7 @@ void set_gain(int r) {
 }
 
 
-unsigned long read_cnt(long offset, int argc) {
+unsigned long read_cnt(int debug) {
 	long count;
 	int i;
 	int b;
@@ -230,19 +247,8 @@ unsigned long read_cnt(long offset, int argc) {
 	count |= (long) ~0xffffff;
  }
 
-// if things are broken this will show actual data
 
-
-if (argc < 2 ) {
-  for (i=31;i>=0;i--) {
-   printf("%d ", ((count-offset) & ( 1 << i )) != 0 );
-  }
-
-  printf("n: %10d     -  ", count - offset);
-  printf("\n"); 
-}
-
-  return (count - offset);
+  return (count);
 
 }
 

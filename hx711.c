@@ -103,8 +103,8 @@ int main(int argc, char **argv)
   setup_gpio();
   reset_converter();
 	
-  get_reading(calibration_factor);
-
+  reading = get_reading(calibration_factor);
+  printf("Reading: %d\n", reading);
   unpull_pins();
   restore_io();
 }

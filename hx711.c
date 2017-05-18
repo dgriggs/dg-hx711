@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     reading = get_reading(calibration_factor);
     printf("Reading: %d\n", reading);
     delay.tv_sec = 0;
-    delay.tv_nsec = 500000000
+    delay.tv_nsec = 500000000;
     if (nanosleep(&delay,NULL)){
 	    printf("delay successful");
     }

@@ -21,7 +21,7 @@
 #define DT_R    (GPIO_IN0  & (1 << DATA_PIN))
 
 void           reset_converter(void);
-unsigned long  read_cnt(long offset, int argc);
+unsigned long  read_cnt(int debug);
 void           set_gain(int r);
 void           setHighPri (void);
 void	       get_reading(float calibration_factor);
@@ -83,16 +83,16 @@ int main(int argc, char **argv)
   {
     if (strcmp(argv[1],"0") == 0)
     {
-      calibration_factor = fabsf(atof(argv[1]));
-      offset = get_reading(calibration_factor);
-      reading = get_reading(calibration_factor);
+      //calibration_factor = fabsf(atof(argv[1]));
+      //offset = get_reading(calibration_factor);
+      //reading = get_reading(calibration_factor);
       printf("The scale has been tared.\n");
       return 0;
     }
     else
     {
     calibration_factor = fabsf(atof(argv[1]));
-    reading = get_reading(calibration_factor);
+    //reading = get_reading(calibration_factor);
     }
   }
   else if (argc == 1)

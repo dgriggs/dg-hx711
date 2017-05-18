@@ -121,7 +121,7 @@ unsigned long get_reading(float calibration_factor)
   long tmp_avg=0;
   long tmp_avg2=0;
   long output=0;
-  float filter_low, filter_high;
+  float filter_low, filter_high, j_filter_high, j_filter_low;
   float spread_percent = SPREAD / 100.0 /2.0;
   int nsamples=N_SAMPLES;
   long samples[nsamples];
@@ -131,9 +131,8 @@ unsigned long get_reading(float calibration_factor)
   	reset_converter();
   	samples[i] = read_cnt(0);
   	tmp_avg += samples[i];
-  }
-
-  tmp_avg = tmp_avg / nsamples;
+  }	
+  tmp_avg = tmp_avg / (nsamples);
 
   tmp_avg2 = 0;
   j=0;
@@ -152,7 +151,6 @@ unsigned long get_reading(float calibration_factor)
   }
   if (j == 0) {
     printf("No data met filter requirements.\n");
-    exit(0);
   }
   output = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
   printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
@@ -183,23 +181,21 @@ void set_gain(int r) {
 	}
 }
 
-
 unsigned long read_cnt(int debug) {
 	long count;
 	int i;
 	int b;
 
-
   count = 0;
 
-
   while( DT_R ); 
+	
 	b++;
 	b++;
 	b++;
 	b++;
 
-  for(i=0;i<24	; i++) {
+  for(i=0; i<24; i++) {
 	SCK_ON;
         count = count << 1;
 	b++;
@@ -213,8 +209,7 @@ unsigned long read_cnt(int debug) {
 //	b++;
 //	b++;
   }
-
-
+	
 	SCK_ON;
 	b++;
 	b++;
@@ -234,7 +229,6 @@ unsigned long read_cnt(int debug) {
   }
 
   // If things are broken this will show actual data
-  //printf("Debug\n"); 
   for (i=31; i>=0; i--) {
     printf("%d ", ((count - offset) & ( 1 << i )) != 0 );
   }

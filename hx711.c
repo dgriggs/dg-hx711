@@ -14,7 +14,7 @@
 
 #define CLOCK_PIN	3
 #define DATA_PIN	2
-#define N_SAMPLES	32
+#define N_SAMPLES	16
 #define SPREAD		10
 
 #define SCK_ON  (GPIO_SET0 = (1 << CLOCK_PIN))
@@ -107,7 +107,11 @@ int main(int argc, char **argv)
   {
     reading = get_reading(calibration_factor);
     printf("Reading: %d\n", reading);
-    short_wait();
+    delay.tv_sec = 0;
+    delay.tv_nsec = 500000000
+    if (nanosleep(&delay,NULL)){
+	    printf("delay successful");
+    }
   }
   unpull_pins();
   restore_io();

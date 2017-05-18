@@ -79,6 +79,8 @@ int main(int argc, char **argv)
   long reading = 0;
   float calibration_factor = 1;
   int b;
+	
+  struct timespec delay;
 
   setHighPri();
   setup_io();

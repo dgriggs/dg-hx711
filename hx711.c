@@ -80,11 +80,6 @@ int main(int argc, char **argv)
   float calibration_factor = 1;
   int b;
 	
-  //struct timespec delay;
-
-  //delay.tv_sec = 0;
-  //delay.tv_nsec = 500000000L;
-	
   setHighPri();
   setup_io();
   setup_gpio();
@@ -112,10 +107,7 @@ int main(int argc, char **argv)
   {
     reading = get_reading(calibration_factor);
     printf("Reading: %d\n", reading);
-    //nanosleep((const struct timespec[]){{0, 500000000L}}, NULL);
-	  //if (nanosleep(&delay,NULL)){
-    //  printf("delay successful");
-    //}
+    nanosleep((const struct timespec[]){{0, 1000000000L}}, NULL);
   }
   unpull_pins();
   restore_io();

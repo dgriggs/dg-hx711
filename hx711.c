@@ -151,6 +151,7 @@ unsigned long get_reading(float calibration_factor)
   }
   if (j == 0) {
     printf("No data met filter requirements.\n");
+    return 0;
   }
   output = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
   printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);

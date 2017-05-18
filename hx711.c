@@ -83,7 +83,7 @@ int main(int argc, char **argv)
   struct timespec delay;
 
   delay.tv_sec = 0;
-  delay.tv_nsec = 500000000;
+  delay.tv_nsec = 500000000L;
 	
   setHighPri();
   setup_io();

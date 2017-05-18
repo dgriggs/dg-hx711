@@ -188,8 +188,9 @@ unsigned long read_cnt(int debug) {
 
   count = 0;
 
-  while( DT_R ); 
-	
+  while( DT_R ) {
+    nanosleep((const struct timespec[]){{0, 5000L}}, NULL); 
+  }
 	b++;
 	b++;
 	b++;

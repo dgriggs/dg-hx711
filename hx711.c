@@ -232,7 +232,7 @@ unsigned long read_cnt(int debug) {
   if (count & 0x800000) {
 	count |= (long) ~0xffffff;
   }
-/*
+
   // If things are broken this will show actual data
   printf("Debug mode with calibration factor = '1'\n"); 
   for (int i=31; i>=0; i--) {
@@ -240,7 +240,7 @@ unsigned long read_cnt(int debug) {
     printf("n: %10d     -  ", count);
     printf("\n");
   }
-	*/
+	
   return (count);
 }
 

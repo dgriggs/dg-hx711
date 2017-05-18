@@ -236,9 +236,9 @@ unsigned long read_cnt(int debug) {
   // If things are broken this will show actual data
   printf("Debug mode with calibration factor = '1'\n"); 
   for (i=31; i>=0; i--) {
-    printf("%d ", ((count) & ( 1 << i )) != 0 );
-    printf("n: %10d     -  ", count);
+    printf("%d ", ((count - offset) & ( 1 << i )) != 0 );
   }
+  printf("n: %10d     -  ", count - offset);
   printf("\n");
 	
   return (count);

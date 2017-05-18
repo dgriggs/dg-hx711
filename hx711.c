@@ -112,7 +112,7 @@ int main(int argc, char **argv)
   {
     reading = get_reading(calibration_factor);
     printf("Reading: %d\n", reading);
-    nanosleep((const struct timespec[]){{0, 500000000L}}, NULL);
+    //nanosleep((const struct timespec[]){{0, 500000000L}}, NULL);
 	  //if (nanosleep(&delay,NULL)){
     //  printf("delay successful");
     //}

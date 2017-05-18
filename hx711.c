@@ -24,7 +24,7 @@ void           reset_converter(void);
 unsigned long  read_cnt(int debug);
 void           set_gain(int r);
 void           setHighPri (void);
-void	       get_reading(float calibration_factor);
+unsigned long  get_reading(float calibration_factor);
 void	       tare(void);
 
 
@@ -83,35 +83,18 @@ int main(int argc, char **argv)
   {
     if (strcmp(argv[1],"0") == 0)
     {
-      //calibration_factor = fabsf(atof(argv[1]));
-      //offset = get_reading(calibration_factor);
-      //reading = get_reading(calibration_factor);
-      printf("The scale has been tared.\n");
-      return 0;
+      printf("Invalid calibration factor. Cannot divide by zero.\n");
+      exit(1);
     }
     else
     {
     calibration_factor = fabsf(atof(argv[1]));
-    //reading = get_reading(calibration_factor);
+    offset = get_reading(calibration_factor);
     }
-  }
-  else if (argc == 1)
-  {
-    /*reading = get_reading(1);
-    // If things are broken this will show actual data
-    printf("Debug mode with calibration factor = '1'\n"); 
-    for (int i=31; i>=0; i--) {
-      printf("%d ", ((reading) & ( 1 << i )) != 0 );
-      printf("n: %10d     -  ", reading);
-      printf("\n");
-    }
-    */
-    printf("nope!\n");
-    exit(0);
   }
   else
   {
-    printf("Please enter 1 argument - either a non-zero positive float value for calibration_factor or a '0' to tare the scale\n");
+    printf("Please enter 1 argument - a non-zero positive float value for calibration_factor.\n");
     exit(1);
   }
 
@@ -126,7 +109,7 @@ int main(int argc, char **argv)
   restore_io();
 }
 	
-void get_reading(float calibration_factor) 
+unsigned long get_reading(float calibration_factor) 
 {
   int i, j;
   long tmp=0;
@@ -162,15 +145,14 @@ void get_reading(float calibration_factor)
 	        j++;
 	}
   }
-
   if (j == 0) {
     printf("No data met filter requirements.\n");
-    exit(255);
+    exit(0);
   }
   output = ((( (float) tmp_avg2 / (float) j) / calibration_factor) - (float) offset);
   printf("%d\n", output);
-
   printf("average within %.2f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
+  return output;
 }
 
 
@@ -243,13 +225,19 @@ unsigned long read_cnt(int debug) {
 //  count = ~0x800000 & count;
 
 
- if (count & 0x800000) {
+  if (count & 0x800000) {
 	count |= (long) ~0xffffff;
- }
-
-
+  }
+/*
+  // If things are broken this will show actual data
+  printf("Debug mode with calibration factor = '1'\n"); 
+  for (int i=31; i>=0; i--) {
+    printf("%d ", ((count) & ( 1 << i )) != 0 );
+    printf("n: %10d     -  ", count);
+    printf("\n");
+  }
+	*/
   return (count);
-
 }
 
 
